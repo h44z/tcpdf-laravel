@@ -1,7 +1,7 @@
 {
-  "name": "beverio/tcpdf-laravel",
+  "name": "h44z/tcpdf-laravel",
   "description": "Better tcpdf support for laravel 5",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "MIT",
   "keywords": [
 	"laravel",
@@ -15,7 +15,7 @@
   ],
   "require": {
 	"illuminate/support": "5.3.x",
-	"tecnickcom/tcpdf": "6.2.12"
+	"tecnickcom/tcpdf": "6.2.13"
   },
   "autoload": {
 	"psr-4": {
