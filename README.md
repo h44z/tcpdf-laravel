@@ -1,15 +1,27 @@
-# Laravel 5.3 TCPDF
+# Laravel 5.4 TCPDF
 
 Forked from: [elibyy/tcpdf-laravel](https://github.com/elibyy/tcpdf-laravel)
 
+A simple [Laravel 5](http://www.laravel.com) service provider with some basic configuration for including the [TCPDF library](http://www.tcpdf.org/)
+
+### Note: The Package code is changed to avoid the confusion, this repository is a replacement to the  [old](https://github.com/elibyy/laravel-tcpdf) one 
+
+#### Note: The versions are now as laravel 5.x
+
 ## Installation
 
-### Step 1
-Require package using
-```composer require beverio/tcpdf-laravel```
+The Laravel TCPDF service provider can be installed via [composer](http://getcomposer.org) by requiring the `elibyy/tcpdf-laravel` package in your project's `composer.json`. (The installation may take a while, because the package requires TCPDF. Sadly its .git folder is very heavy)
 
-### Step 2
-Add the service provider and aliases to `config/app.php`.
+```json
+{
+    "require": {
+        "elibyy/tcpdf-laravel": "5.4.*"
+    }
+}
+```
+
+Next, add the service provider to `config/app.php`.
+
 ```php
 'providers' => [
     //...
@@ -19,32 +31,43 @@ Add the service provider and aliases to `config/app.php`.
 //...
 
 'aliases' => [
-    //...
-    'PDF' => Elibyy\TCPDF\Facades\TCPDF::class
+	//...
+	'PDF' => Elibyy\TCPDF\Facades\TCPDF::class
 ]
 ```
 
-## Usage
-Create a view in `resources/views/`. You can use all TCPDF methods with the `PDF` facade.
+for lumen you should add the following line:
 
 ```php
-
+$app->register(Elibyy\TCPDF\ServiceProvider::class);
 ```
 
-Close each view with
+
+That's it! You're good to go.
+
+Here is a little example:
+
 ```php
-PDF::Show();
+use PDF; // at the top of the file
+
+	PDF::SetTitle('Hello World');
+	PDF::AddPage();
+	PDF::Write(0, 'Hello World');
+	PDF::Output('hello_world.pdf');
 ```
 
-In your controller use
+another example for generating multiple PDF's
+
 ```php
-return PDF::inline('path.to.view', compact('var1', 'var2'), 'OptionalFilename.pdf');
+use PDF; // at the top of the file
+	for ($i = 0; $i < 5; $i++) {
+		PDF::SetTitle('Hello World'.$i);
+		PDF::AddPage();
+		PDF::Write(0, 'Hello World'.$i);
+		PDF::Output(public_path('hello_world' . $i . '.pdf'), 'F');
+		PDF::reset();
+	}
 ```
-to show a PDF file inline, or
-```php
-return PDF::save('path.to.view', compact('var1', 'var2'), 'OptionalFilename.pdf');
-```
-to force the user to download the file.
 
 For a list of all available function take a look at the [TCPDF Documentation](http://www.tcpdf.org/doc/code/classTCPDF.html)
 
@@ -56,3 +79,9 @@ If you want to override the defaults, you can publish the config, like so:
     php artisan vendor:publish
 
 Now access `config/tcpdf.php` to customize.
+
+## Header/Footer helpers
+
+I've got a pull-request asking for this so I've added the feature
+
+now you can use `PDF::setHeaderCallback(function($pdf){})` or `PDF::setFooterCallback(function($pdf){})`
